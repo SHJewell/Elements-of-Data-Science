@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.stats import norm
+import seaborn as sns
 
 import tools
 
@@ -195,12 +196,38 @@ ys = norm(0, 1).cdf(xs)
 print(age.describe())
 
 x_age = np.linspace(age.min(), age.max())
-y_age = norm(1, age.max()).cdf(x_age)
+y_age = norm(loc=age.describe()['mean'], scale=age.describe()['std']).cdf(x_age, )
 
-plt.plot(x_age, y_age, color='gray', label='Normal CDF')
-cdf_age.plot(label='US Age')
-plt.xlabel('Age (years)')
-plt.ylabel('CDF')
+# plt.plot(x_age, y_age, color='gray', label='Normal CDF')
+# cdf_age.plot(label='US Age')
+# plt.xlabel('Age (years)')
+# plt.ylabel('CDF')
+# plt.legend()
+# plt.show()
+
+log_income = np.log10(income.replace(0, np.nan))
+
+print(log_income.describe())
+
+x_log_income = np.linspace(log_income.min(), log_income.max())
+y_log_income = norm(loc=log_income.describe()['mean'], scale=log_income.describe()['std']).cdf(x_log_income, )
+
+cdf_log_income = Cdf.from_seq(log_income)
+
+# plt.plot(x_log_income, y_log_income, color='gray', label='Normal CDF')
+# cdf_log_income.plot(label='Natural Log of Income')
+# plt.xlabel('log10(Income (1986 USD))')
+# plt.ylabel('CDF')
+# plt.legend()
+# plt.show()
+
+ys = norm(0, 1).pdf(xs)
+
+plt.plot(xs, ys, color='gray', label='Normal PDF')
+sns.kdeplot(sample, label='Estimated sample PDF')
+plt.xlabel('x')
+plt.ylabel('PDF')
+plt.title('Normal Density Function')
 plt.legend()
 plt.show()
 
